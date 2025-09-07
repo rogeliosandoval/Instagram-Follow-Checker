@@ -38,9 +38,20 @@ document.getElementById('scrapeFollowers').addEventListener('click', () => {
 
         const filteredUsernames = [...new Set(usernames)]
 
-        localStorage.setItem('scrapedUsernames', JSON.stringify(filteredUsernames))
+        // Grab the modal container
+        const modal = document.querySelector('div[role="dialog"]')
 
-        console.log('Scraped usernames:', filteredUsernames)
+        // Find the title element inside
+        const titleElement = modal?.querySelector('._ac78 > div')
+
+        // Get the text (should be "Followers" or "Following")
+        const modalTitle = titleElement ? titleElement.textContent.trim() : null
+
+        if (modalTitle === 'Followers') {
+          localStorage.setItem('scrapedFollowers', JSON.stringify(filteredUsernames))
+        } else if (modalTitle === 'Following') {
+          localStorage.setItem('scrapedFollowing', JSON.stringify(filteredUsernames))
+        }
       }
     })
   })
@@ -51,13 +62,17 @@ document.getElementById('cacheButton').addEventListener('click', () => {
     chrome.scripting.executeScript({
       target: { tabId: tabs[0].id },
       func: () => {
-        const usernames = localStorage.getItem('scrapedUsernames')
+        const followers = localStorage.getItem('scrapedFollowers')
+        const following = localStorage.getItem('scrapedFollowing')
 
-        if (usernames) {
-          const ness = JSON.parse(usernames)
-          console.log('THIS IS THE CACHE:', ness)
+        if (followers || following) {
+          const parsedFollowers = JSON.parse(followers)
+          const parsedFollowing = JSON.parse(following)
+
+          console.log('Cached Followers:', parsedFollowers)
+          console.log('Cached Following:', parsedFollowing)
         } else {
-          console.log('There is nothing in the cache my boy')
+          console.log('Nothing in the cache')
         }
       }
     })
