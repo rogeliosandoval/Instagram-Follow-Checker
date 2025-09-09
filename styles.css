@@ -1,18 +1,57 @@
 body {
-  font-family: Arial, sans-serif;
-  padding: 10px;
-  width: 250px;
+  margin: 0 auto;
+  background-color: #0e172a;
+  color: white;
+  margin: 0.5rem;
+  min-width: 350px;
 }
-button {
-  display: block;
-  margin: 5px 0;
-  padding: 5px;
+
+.title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 1.3rem;
+}
+.title h1 {
+  font-family: "Noto Sans", sans-serif;
+  font-size: 1.2rem;
+  margin: 0;
+  font-weight: bold;
+}
+.title select {
+  min-width: 150px;
+  font-size: 1rem;
+  font-family: "Noto Sans", sans-serif;
+  border: none;
+  outline: none;
+  background: black;
+  color: white;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  border-radius: 5px;
+}
+
+.main-logo {
+  max-width: 180px;
+  height: auto;
+  margin-bottom: 0.7rem;
+}
+
+.sub-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
   width: 100%;
 }
-pre {
-  background: #f4f4f4;
-  padding: 5px;
-  max-height: 150px;
-  overflow-y: auto;
-  font-size: 12px;
+.sub-title img {
+  max-width: 20px;
+  height: auto;
 }
+.sub-title p {
+  font-family: "Noto Sans", sans-serif;
+  font-size: 1rem;
+  margin: 0;
+  font-weight: bold;
+}/*# sourceMappingURL=styles.css.map */

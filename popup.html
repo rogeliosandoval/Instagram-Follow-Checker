@@ -2,16 +2,29 @@
 <html>
   <head>
     <title>Instagram Scraper</title>
-    <style>
-      body { font-family: Arial, sans-serif; padding: 10px; }
-      button { padding: 8px 12px; margin-top: 10px; cursor: pointer; }
-    </style>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
   </head>
   <body>
-    <h3>Scrape Instagram</h3>
-    <button id="scrapeFollowers">Scrape Followers/Following</button>
+    
+    <div class="title">
+      <img class="main-logo" src="/images/logo-light.svg" alt="logo">
+      <select name="social">
+        <option value="Instagram">Instagram</option>
+        <option value="TikTok" disabled>TikTok</option>
+        <option value="X" disabled>X (Twitter)</option>
+        <option value="Facebook" disabled>Facebook</option>
+      </select>
+      <div class="sub-title">
+        <img src="/images/instagram-icon.svg" alt="instagram-icon">
+        <p>Instagram Addition</p>
+      </div>
+    </div>
+    <!-- <button id="scrapeFollowers">Scrape Followers/Following</button>
     <button id="cacheButton">Log the cache!</button>
     <button id="showMeWho">Show me who isn't following back!</button>
-    <script src="popup.js"></script>
+    <script src="popup.js"></script> -->
   </body>
 </html>

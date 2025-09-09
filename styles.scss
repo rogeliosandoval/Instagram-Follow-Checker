@@ -1,0 +1,61 @@
+body {
+  margin: 0 auto;
+  background-color: #0e172a;
+  color: white;
+  margin: 0.5rem;
+  min-width: 350px;
+}
+
+.title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 1.3rem;
+
+  h1 {
+    font-family: "Noto Sans", sans-serif;
+    font-size: 1.2rem;
+    margin: 0;
+    font-weight: bold;
+  }
+
+  select {
+    min-width: 150px;
+    font-size: 1rem;
+    font-family: "Noto Sans", sans-serif;
+    border: none;
+    outline: none;
+    background: black;
+    color: white;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    border-radius: 5px;
+  }
+}
+
+.main-logo {
+  max-width: 180px;
+  height: auto;
+  margin-bottom: 0.7rem;
+}
+
+.sub-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+
+  img {
+    max-width: 20px;
+    height: auto;
+  }
+
+  p {
+    font-family: "Noto Sans", sans-serif;
+    font-size: 1rem;
+    margin: 0;
+    font-weight: bold;
+  }
+}
