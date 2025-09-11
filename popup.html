@@ -22,10 +22,37 @@
         <img src="/images/instagram-icon.svg" alt="instagram-icon">
         <p>Instagram Addition</p>
       </div>
+      <div class="steps">
+        <div class="step" id="step1">
+          <strong>Step 1</strong>
+          <p id="followersP">Click on your followers and then click this button to begin scraping</p>
+          <div class="loading-bit" id="followersLoader">
+            <div class="loader"></div>
+            Reading your followers...
+            <br/>
+            <small style="color: orange;">(this may take awhile if you have a lot)</small>
+          </div>
+          <button id="followersButton">Scrape Followers</button>
+          <img class="fade-in" id="followersCheck" src="/images/text-document-check-icon.svg" alt="document checked">
+          <p class="p2 fade-in" id="followersP2">Followers have been scraped!</p>
+        </div>
+
+        <div class="step disabled" id="step2">
+          <strong>Step 2</strong>
+          <p>Now click on your following count and do the same thing</p>
+          <button>Scrape Following</button>
+        </div>
+
+        <div class="step disabled" id="step3">
+          <strong>Step 3</strong>
+          <p>Now click on your following count and do the same thing</p>
+          <button>Scrape Following</button>
+        </div>
+      </div>
     </div>
-    <!-- <button id="scrapeFollowers">Scrape Followers/Following</button>
+    <!-- <button id="scrapeFollowers">Scrape Followers/Following</button> -->
     <button id="cacheButton">Log the cache!</button>
-    <button id="showMeWho">Show me who isn't following back!</button>
-    <script src="popup.js"></script> -->
+    <!-- <button id="showMeWho">Show me who isn't following back!</button> -->
+    <script src="popup.js"></script>
   </body>
 </html>
