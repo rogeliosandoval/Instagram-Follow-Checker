@@ -6,6 +6,36 @@ const followersP2 = document.getElementById('followersP2')
 const step1 = document.getElementById('step1')
 const step2 = document.getElementById('step2')
 
+function onInit() {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    chrome.scripting.executeScript({
+      target: { tabId: tabs[0].id },
+      func: () => {
+        const followers = localStorage.getItem('scrapedFollowers')
+
+        if (followers) {
+          return true
+        } else {
+          return false
+        }
+      },
+    }, (response) => {
+      if (response[0].result) {
+        followersLoader.style.display = 'flex'
+        followersButton.style.display = 'none'
+        followersP.style.display = 'none'
+        followersLoader.style.display = 'none'
+        followersCheck.style.display = 'block'
+        followersP2.style.display = 'block'
+        step1.classList.add('disabled')
+        step2.classList.remove('disabled')
+      }
+    })
+  })
+}
+
+onInit()
+
 followersButton.addEventListener('click', () => {
   followersLoader.style.display = 'flex'
   followersButton.style.display = 'none'
@@ -91,81 +121,6 @@ async function scrapeFromPage() {
   console.log(`Scraped ${filteredUsernames.length} usernames from ${modalTitle}`)
   return true // ✅ signals success back to popup
 }
-
-// document.getElementById('scrapeFollowers').addEventListener('click', () => {
-//   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-//     chrome.scripting.executeScript({
-//       target: { tabId: tabs[0].id },
-//       func: async () => {
-//         const scrollContainer = document.querySelector(
-//           'div[role="dialog"] div.x6nl9eh.x1a5l9x9.x7vuprf.x1mg3h75.x1lliihq.x1iyjqo2.xs83m0k.xz65tgg.x1rife3k.x1n2onr6'
-//         )
-//         if (!scrollContainer) {
-//           return alert('Please open the followers/following modal first!')
-//         }
-
-//         // Keep scrolling until bottom
-//         let previousHeight = 0
-//         let retries = 0
-//         while (true) {
-//           scrollContainer.scrollTop = scrollContainer.scrollHeight
-//           await new Promise(r => setTimeout(r, 1000))
-
-//           const currentHeight = scrollContainer.scrollHeight
-//           if (currentHeight === previousHeight) {
-//             retries++
-//             if (retries >= 3) break
-//           } else {
-//             retries = 0
-//             previousHeight = currentHeight
-//           }
-//         }
-
-//         // --------------------------
-//         // Grab only the 2nd child (real users list), ignore the "Suggested" block
-//         // --------------------------
-//         const children = scrollContainer.children
-//         const realUsersContainer = children[0] // index 1 = second child
-//         if (!realUsersContainer) {
-//           return console.log('No real user container found')
-//         }
-
-//         const userLinks = realUsersContainer.querySelectorAll('a[href^="/"]')
-//         const usernames = []
-//         userLinks.forEach(link => {
-//           const href = link.getAttribute('href')
-//           if (href && /^\/[^/]+\/$/.test(href)) usernames.push(href.slice(1, -1))
-//         })
-
-//         const filteredUsernames = [...new Set(usernames)]
-
-//         // Find title (Followers/Following)
-//         const modal = document.querySelector('div[role="dialog"]')
-//         const titleElement = modal?.querySelector('._ac78 > div')
-//         const modalTitle = titleElement ? titleElement.textContent.trim() : null
-
-//         if (modalTitle === 'Followers') {
-//           localStorage.setItem('scrapedFollowers', JSON.stringify(filteredUsernames))
-//         } else if (modalTitle === 'Following') {
-//           localStorage.setItem('scrapedFollowing', JSON.stringify(filteredUsernames))
-//         }
-
-//         console.log(`Scraped ${filteredUsernames.length} usernames from ${modalTitle}`)
-//       }
-//     })
-//   })
-//   window.close()
-// })
-
-// function hasSuggestedForYou(container) {
-//   const headers = container.querySelectorAll('h4')
-//   for (const header of headers) {
-//     if (header.textContent.trim().toLowerCase() === 'suggested for you') {
-//       return true
-//     }
-//   }
-//   return false
-// }
 
 document.getElementById('cacheButton').addEventListener('click', () => {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
