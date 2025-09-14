@@ -2,10 +2,7 @@ manifest.json   <-- Required config file for Chrome
 This is the “package.json” of extensions. For Chrome v3:
 content_scripts = code injected into Instagram pages (where you’ll scrape followers/following).
 action = popup that shows when the user clicks your extension.
-
 content.js      <-- Runs inside Instagram’s page
-
 popup.html      <-- Small popup UI when clicking the extension
 This is like your Angular component but barebones HTML
-
 popup.js        <-- Logic for the popup UI
