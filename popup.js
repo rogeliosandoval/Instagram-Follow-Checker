@@ -37,10 +37,20 @@ function onInit() {
 onInit()
 
 followersButton.addEventListener('click', () => {
-  followersLoader.style.display = 'flex'
-  followersButton.style.display = 'none'
-  followersP.style.display = 'none'
-  scraperFunction()
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    const tab = tabs[0]
+
+    // ✅ Only run if you're on instagram.com
+    if (!tab.url || !tab.url.includes('instagram.com')) {
+      alert('You can\'t use this here silly :p')
+      return
+    }
+
+    followersLoader.style.display = 'flex'
+    followersButton.style.display = 'none'
+    followersP.style.display = 'none'
+    scraperFunction()
+  })
 })
 
 async function scraperFunction() {
