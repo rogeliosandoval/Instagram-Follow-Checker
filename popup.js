@@ -78,6 +78,19 @@ function onInitFollowing() {
 
 onInitFollowing()
 
+document.getElementById('resetData').addEventListener('click', () => {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    chrome.scripting.executeScript({
+      target: { tabId: tabs[0].id },
+      func: () => {
+        localStorage.removeItem('scrapedFollowers')
+        localStorage.removeItem('scrapedFollowing')
+      }
+    })
+  })
+  window.close()
+})
+
 followersButton.addEventListener('click', () => {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const tab = tabs[0]
