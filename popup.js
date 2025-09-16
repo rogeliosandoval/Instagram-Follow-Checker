@@ -13,6 +13,10 @@ const followingP2 = document.getElementById('followingP2')
 const step2 = document.getElementById('step2')
 
 const step3 = document.getElementById('step3')
+const steps = document.getElementById('steps')
+const finalResultsLoading = document.getElementById('finalResultsLoading')
+const finalResults = document.getElementById('finalResults')
+const resultsListing = document.getElementById('resultsListing')
 
 function onInitFollowers() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -207,31 +211,11 @@ async function scrapeFromPage(type) {
   return true // ✅ signals success back to popup
 }
 
-// document.getElementById('cacheButton').addEventListener('click', () => {
-//   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-//     chrome.scripting.executeScript({
-//       target: { tabId: tabs[0].id },
-//       func: () => {
-//         const followers = localStorage.getItem('scrapedFollowers')
-//         const following = localStorage.getItem('scrapedFollowing')
-
-//         if (followers || following) {
-//           const parsedFollowers = JSON.parse(followers)
-//           const parsedFollowing = JSON.parse(following)
-
-//           console.log('Cached Followers:', parsedFollowers)
-//           console.log('Cached Following:', parsedFollowing)
-//         } else {
-//           console.log('Nothing in the cache')
-//         }
-//       }
-//     })
-//   })
-//   window.close()
-// })
-
 document.getElementById('showMeWho').addEventListener('click', () => {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  steps.style.display = 'none'
+  finalResultsLoading.style.display = 'flex'
+
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     chrome.scripting.executeScript({
       target: { tabId: tabs[0].id },
       func: () => {
@@ -243,14 +227,26 @@ document.getElementById('showMeWho').addEventListener('click', () => {
           const parsedFollowing = JSON.parse(following)
           const followersSet = new Set(parsedFollowers)
           const notFollowingBack = parsedFollowing.filter(user => !followersSet.has(user))
-  
-          console.log('These people are not following me back:', notFollowingBack)
+
+          return notFollowingBack   // ✅ send this back to popup
         } else {
           alert('Please make sure you scrape your followers and following before running this method.')
+          return []  // return empty array so popup doesn’t break
         }
-
       }
+    }, (response) => {
+      const notFollowingBack = response[0]?.result || []
+
+      setTimeout(() => {
+        finalResultsLoading.style.display = 'none'
+        finalResults.style.display = 'flex'
+  
+        notFollowingBack.forEach(user => {
+          const li = document.createElement('li')
+          li.textContent = user
+          resultsListing.appendChild(li)
+        })
+      }, 2000)
     })
   })
-  window.close()
 })
