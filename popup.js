@@ -4,7 +4,15 @@ const followersP = document.getElementById('followersP')
 const followersCheck = document.getElementById('followersCheck')
 const followersP2 = document.getElementById('followersP2')
 const step1 = document.getElementById('step1')
+
+const followingLoader = document.getElementById('followingLoader')
+const followingButton = document.getElementById('followingButton')
+const followingP = document.getElementById('followingP')
+const followingCheck = document.getElementById('followingCheck')
+const followingP2 = document.getElementById('followingP2')
 const step2 = document.getElementById('step2')
+
+const step3 = document.getElementById('step3')
 
 function onInit() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -49,19 +57,36 @@ followersButton.addEventListener('click', () => {
     followersLoader.style.display = 'flex'
     followersButton.style.display = 'none'
     followersP.style.display = 'none'
-    scraperFunction()
+    scraperFunctionFollowers()
   })
 })
 
-async function scraperFunction() {
+followingButton.addEventListener('click', () => {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    const tab = tabs[0]
+
+    // ✅ Only run if you're on instagram.com
+    if (!tab.url || !tab.url.includes('instagram.com')) {
+      alert('You can\'t use this here silly :p')
+      return
+    }
+
+    followingLoader.style.display = 'flex'
+    followingButton.style.display = 'none'
+    followingP.style.display = 'none'
+    scraperFunctionFollowing()
+  })
+})
+
+async function scraperFunctionFollowers() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     chrome.scripting.executeScript(
       {
         target: { tabId: tabs[0].id },
-        func: scrapeFromPage
+        func: scrapeFromPage,
+        args: ['Followers']
       },
       (results) => {
-        // ✅ Only update popup DOM here
         followersLoader.style.display = 'none'
         followersCheck.style.display = 'block'
         followersP2.style.display = 'block'
@@ -74,13 +99,38 @@ async function scraperFunction() {
   })
 }
 
+async function scraperFunctionFollowing() {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    chrome.scripting.executeScript(
+      {
+        target: { tabId: tabs[0].id },
+        func: scrapeFromPage,
+        args: ['Following']
+      },
+      (results) => {
+        followingLoader.style.display = 'none'
+        followingCheck.style.display = 'block'
+        followingP2.style.display = 'block'
+        step2.classList.add('disabled')
+        step3.classList.remove('disabled')
+
+        console.log("Scraping complete:", results[0].result)
+      }
+    )
+  })
+}
+
 // --- this runs in the page, not popup ---
-async function scrapeFromPage() {
+async function scrapeFromPage(type) {
+  const modal = document.querySelector('div[role="dialog"]')
+  const titleElement = modal?.querySelector('._ac78 > div')
+  const modalTitle = titleElement ? titleElement.textContent.trim() : null
+
   const scrollContainer = document.querySelector(
     'div[role="dialog"] div.x6nl9eh.x1a5l9x9.x7vuprf.x1mg3h75.x1lliihq.x1iyjqo2.xs83m0k.xz65tgg.x1rife3k.x1n2onr6'
   )
-  if (!scrollContainer) {
-    alert('Please open the popup first!')
+  if (!scrollContainer || modalTitle !== type) {
+    alert('Please follow the instructions!')
     return false
   }
 
@@ -116,11 +166,6 @@ async function scrapeFromPage() {
   })
 
   const filteredUsernames = [...new Set(usernames)]
-
-  // Modal title
-  const modal = document.querySelector('div[role="dialog"]')
-  const titleElement = modal?.querySelector('._ac78 > div')
-  const modalTitle = titleElement ? titleElement.textContent.trim() : null
 
   if (modalTitle === 'Followers') {
     localStorage.setItem('scrapedFollowers', JSON.stringify(filteredUsernames))

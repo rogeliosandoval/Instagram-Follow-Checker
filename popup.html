@@ -40,19 +40,25 @@
 
       <div class="step disabled" id="step2">
         <strong>Step 2</strong>
-        <p>Now click on your following count and do the same thing</p>
-        <button>Scrape Following</button>
+        <p id="followingP">Now click on your following count and do the same thing</p>
+        <div class="loading-bit" id="followingLoader">
+          <div class="loader"></div>
+          Reading your following...
+          <br/>
+          <small style="color: orange;">(this may take awhile if you have a lot)</small>
+        </div>
+        <button id="followingButton">Scrape Following</button>
+        <img class="fade-in" id="followingCheck" src="/images/text-document-check-icon.svg" alt="document checked">
+        <p class="p2 fade-in" id="followingP2">Followers have been scraped!</p>
       </div>
 
       <div class="step disabled" id="step3">
         <strong>Step 3</strong>
-        <p>Now click on your following count and do the same thing</p>
-        <button>Scrape Following</button>
+        <p>Compare and see who is not following you :)</p>
+        <button>Compare</button>
       </div>
     </div>
-    <!-- <button id="scrapeFollowers">Scrape Followers/Following</button> -->
     <button id="cacheButton">Log the cache!</button>
-    <button id="stateBack">STATE BACK</button>
     <!-- <button id="showMeWho">Show me who isn't following back!</button> -->
     <script src="popup.js"></script>
   </body>
