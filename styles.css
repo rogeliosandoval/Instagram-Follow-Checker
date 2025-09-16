@@ -1,7 +1,7 @@
 body {
   position: relative;
   margin: 0 auto;
-  background-color: #3c455a;
+  background-color: #0f172b;
   color: white;
   margin: 0.5rem auto;
   margin-bottom: 1.5rem;
@@ -99,7 +99,7 @@ body {
   justify-content: space-between;
   min-width: 230px;
   height: 150px;
-  background-color: #0f172b;
+  background-color: rgba(0, 0, 0, 0.513);
   padding: 1rem;
   border-radius: 10px;
 }
@@ -167,7 +167,11 @@ body {
   gap: 0.5rem;
   font-family: "Noto Sans", sans-serif;
   font-size: 0.8rem;
-  padding: 1rem;
+}
+.loading-bit small {
+  font-family: "Noto Sans", sans-serif;
+  font-size: 0.7rem;
+  text-align: center;
 }
 
 .final-results-loading {
