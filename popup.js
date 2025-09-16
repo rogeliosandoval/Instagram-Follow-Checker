@@ -14,7 +14,7 @@ const step2 = document.getElementById('step2')
 
 const step3 = document.getElementById('step3')
 
-function onInit() {
+function onInitFollowers() {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     chrome.scripting.executeScript({
       target: { tabId: tabs[0].id },
@@ -42,7 +42,37 @@ function onInit() {
   })
 }
 
-onInit()
+onInitFollowers()
+
+function onInitFollowing() {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    chrome.scripting.executeScript({
+      target: { tabId: tabs[0].id },
+      func: () => {
+        const following = localStorage.getItem('scrapedFollowing')
+
+        if (following) {
+          return true
+        } else {
+          return false
+        }
+      },
+    }, (response) => {
+      if (response[0].result) {
+        followingLoader.style.display = 'flex'
+        followingButton.style.display = 'none'
+        followingP.style.display = 'none'
+        followingLoader.style.display = 'none'
+        followingCheck.style.display = 'block'
+        followingP2.style.display = 'block'
+        step2.classList.add('disabled')
+        step3.classList.remove('disabled')
+      }
+    })
+  })
+}
+
+onInitFollowing()
 
 followersButton.addEventListener('click', () => {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
@@ -177,50 +207,50 @@ async function scrapeFromPage(type) {
   return true // ✅ signals success back to popup
 }
 
-document.getElementById('cacheButton').addEventListener('click', () => {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    chrome.scripting.executeScript({
-      target: { tabId: tabs[0].id },
-      func: () => {
-        const followers = localStorage.getItem('scrapedFollowers')
-        const following = localStorage.getItem('scrapedFollowing')
-
-        if (followers || following) {
-          const parsedFollowers = JSON.parse(followers)
-          const parsedFollowing = JSON.parse(following)
-
-          console.log('Cached Followers:', parsedFollowers)
-          console.log('Cached Following:', parsedFollowing)
-        } else {
-          console.log('Nothing in the cache')
-        }
-      }
-    })
-  })
-  window.close()
-})
-
-// document.getElementById('showMeWho').addEventListener('click', () => {
-//     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+// document.getElementById('cacheButton').addEventListener('click', () => {
+//   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 //     chrome.scripting.executeScript({
 //       target: { tabId: tabs[0].id },
 //       func: () => {
 //         const followers = localStorage.getItem('scrapedFollowers')
 //         const following = localStorage.getItem('scrapedFollowing')
 
-//         if (followers && following) {
+//         if (followers || following) {
 //           const parsedFollowers = JSON.parse(followers)
 //           const parsedFollowing = JSON.parse(following)
-//           const followersSet = new Set(parsedFollowers)
-//           const notFollowingBack = parsedFollowing.filter(user => !followersSet.has(user))
-  
-//           console.log('These people are not following me back:', notFollowingBack)
-//         } else {
-//           alert('Please make sure you scrape your followers and following before running this method.')
-//         }
 
+//           console.log('Cached Followers:', parsedFollowers)
+//           console.log('Cached Following:', parsedFollowing)
+//         } else {
+//           console.log('Nothing in the cache')
+//         }
 //       }
 //     })
 //   })
 //   window.close()
 // })
+
+document.getElementById('showMeWho').addEventListener('click', () => {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    chrome.scripting.executeScript({
+      target: { tabId: tabs[0].id },
+      func: () => {
+        const followers = localStorage.getItem('scrapedFollowers')
+        const following = localStorage.getItem('scrapedFollowing')
+
+        if (followers && following) {
+          const parsedFollowers = JSON.parse(followers)
+          const parsedFollowing = JSON.parse(following)
+          const followersSet = new Set(parsedFollowers)
+          const notFollowingBack = parsedFollowing.filter(user => !followersSet.has(user))
+  
+          console.log('These people are not following me back:', notFollowingBack)
+        } else {
+          alert('Please make sure you scrape your followers and following before running this method.')
+        }
+
+      }
+    })
+  })
+  window.close()
+})
