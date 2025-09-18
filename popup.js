@@ -144,7 +144,6 @@ async function scraperFunctionFollowers() {
           followersP2.style.display = 'block'
           step1.classList.add('disabled')
           step2.classList.remove('disabled')
-          console.log("Scraping complete")
         } else {
           // Fallback UI
           alert("Something went wrong while scraping. Please try again.")
@@ -165,12 +164,20 @@ async function scraperFunctionFollowing() {
       },
       (results) => {
         followingLoader.style.display = 'none'
-        followingCheck.style.display = 'block'
-        followingP2.style.display = 'block'
-        step2.classList.add('disabled')
-        step3.classList.remove('disabled')
+        followingButton.style.display = 'block'
+        followingP.style.display = 'block'
 
-        console.log("Scraping complete:", results[0].result)
+        const success = results?.[0]?.result
+        if (success === true) {
+          followingCheck.style.display = 'block'
+          followingP2.style.display = 'block'
+          step2.classList.add('disabled')
+          step3.classList.remove('disabled')
+        } else {
+          // Fallback UI
+          alert("Something went wrong while scraping. Please try again.")
+          step2.classList.remove('disabled')
+        }
       }
     )
   })
