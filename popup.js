@@ -135,12 +135,21 @@ async function scraperFunctionFollowers() {
       },
       (results) => {
         followersLoader.style.display = 'none'
-        followersCheck.style.display = 'block'
-        followersP2.style.display = 'block'
-        step1.classList.add('disabled')
-        step2.classList.remove('disabled')
+        followersButton.style.display = 'block'
+        followersP.style.display = 'block'
 
-        console.log("Scraping complete:", results[0].result)
+        const success = results?.[0]?.result
+        if (success === true) {
+          followersCheck.style.display = 'block'
+          followersP2.style.display = 'block'
+          step1.classList.add('disabled')
+          step2.classList.remove('disabled')
+          console.log("Scraping complete")
+        } else {
+          // Fallback UI
+          alert("Something went wrong while scraping. Please try again.")
+          step1.classList.remove('disabled')
+        }
       }
     )
   })
@@ -169,59 +178,64 @@ async function scraperFunctionFollowing() {
 
 // --- this runs in the page, not popup ---
 async function scrapeFromPage(type) {
-  const modal = document.querySelector('div[role="dialog"]')
-  const titleElement = modal?.querySelector('._ac78 > div')
-  const modalTitle = titleElement ? titleElement.textContent.trim() : null
-
-  const scrollContainer = document.querySelector(
-    'div[role="dialog"] div.x6nl9eh.x1a5l9x9.x7vuprf.x1mg3h75.x1lliihq.x1iyjqo2.xs83m0k.xz65tgg.x1rife3k.x1n2onr6'
-  )
-  if (!scrollContainer || modalTitle !== type) {
-    alert('Please follow the instructions!')
-    return false
-  }
-
-  // Keep scrolling
-  let previousHeight = 0
-  let retries = 0
-  while (true) {
-    scrollContainer.scrollTop = scrollContainer.scrollHeight
-    await new Promise(r => setTimeout(r, 1000))
-
-    const currentHeight = scrollContainer.scrollHeight
-    if (currentHeight === previousHeight) {
-      retries++
-      if (retries >= 3) break
-    } else {
-      retries = 0
-      previousHeight = currentHeight
+  try {
+    const modal = document.querySelector('div[role="dialog"]')
+    const titleElement = modal?.querySelector('._ac78 > div')
+    const modalTitle = titleElement ? titleElement.textContent.trim() : null
+  
+    const scrollContainer = document.querySelector(
+      'div[role="dialog"] div.x6nl9eh.x1a5l9x9.x7vuprf.x1mg3h75.x1lliihq.x1iyjqo2.xs83m0k.xz65tgg.x1rife3k.x1n2onr6'
+    )
+    if (!scrollContainer || modalTitle !== type) {
+      alert('Please follow the instructions!')
+      return false
     }
-  }
-
-  // Grab users
-  const children = scrollContainer.children
-  const realUsersContainer = children[0]
-  if (!realUsersContainer) {
+  
+    // Keep scrolling
+    let previousHeight = 0
+    let retries = 0
+    while (true) {
+      scrollContainer.scrollTop = scrollContainer.scrollHeight
+      await new Promise(r => setTimeout(r, 1000))
+  
+      const currentHeight = scrollContainer.scrollHeight
+      if (currentHeight === previousHeight) {
+        retries++
+        if (retries >= 3) break
+      } else {
+        retries = 0
+        previousHeight = currentHeight
+      }
+    }
+  
+    // Grab users
+    const children = scrollContainer.children
+    const realUsersContainer = children[0]
+    if (!realUsersContainer) {
+      return false
+    }
+  
+    const userLinks = realUsersContainer.querySelectorAll('a[href^="/"]')
+    const usernames = []
+    userLinks.forEach(link => {
+      const href = link.getAttribute('href')
+      if (href && /^\/[^/]+\/$/.test(href)) usernames.push(href.slice(1, -1))
+    })
+  
+    const filteredUsernames = [...new Set(usernames)]
+  
+    if (modalTitle === 'Followers') {
+      localStorage.setItem('scrapedFollowers', JSON.stringify(filteredUsernames))
+    } else if (modalTitle === 'Following') {
+      localStorage.setItem('scrapedFollowing', JSON.stringify(filteredUsernames))
+    }
+  
+    console.log(`Scraped ${filteredUsernames.length} usernames from ${modalTitle}`)
+    return true // ✅ signals success back to popup
+  } catch (error) {
+    console.log("Scrape error:", error)
     return false
   }
-
-  const userLinks = realUsersContainer.querySelectorAll('a[href^="/"]')
-  const usernames = []
-  userLinks.forEach(link => {
-    const href = link.getAttribute('href')
-    if (href && /^\/[^/]+\/$/.test(href)) usernames.push(href.slice(1, -1))
-  })
-
-  const filteredUsernames = [...new Set(usernames)]
-
-  if (modalTitle === 'Followers') {
-    localStorage.setItem('scrapedFollowers', JSON.stringify(filteredUsernames))
-  } else if (modalTitle === 'Following') {
-    localStorage.setItem('scrapedFollowing', JSON.stringify(filteredUsernames))
-  }
-
-  console.log(`Scraped ${filteredUsernames.length} usernames from ${modalTitle}`)
-  return true // ✅ signals success back to popup
 }
 
 document.getElementById('showMeWho').addEventListener('click', () => {
