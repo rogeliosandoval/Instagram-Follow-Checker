@@ -135,8 +135,6 @@ async function scraperFunctionFollowers() {
       },
       (results) => {
         followersLoader.style.display = 'none'
-        followersButton.style.display = 'block'
-        followersP.style.display = 'block'
 
         const success = results?.[0]?.result
         if (success === true) {
@@ -148,6 +146,8 @@ async function scraperFunctionFollowers() {
           // Fallback UI
           alert("Something went wrong while scraping. Please try again.")
           step1.classList.remove('disabled')
+          followersButton.style.display = 'block'
+          followersP.style.display = 'block'
         }
       }
     )
@@ -164,8 +164,6 @@ async function scraperFunctionFollowing() {
       },
       (results) => {
         followingLoader.style.display = 'none'
-        followingButton.style.display = 'block'
-        followingP.style.display = 'block'
 
         const success = results?.[0]?.result
         if (success === true) {
@@ -177,6 +175,8 @@ async function scraperFunctionFollowing() {
           // Fallback UI
           alert("Something went wrong while scraping. Please try again.")
           step2.classList.remove('disabled')
+          followingButton.style.display = 'block'
+          followingP.style.display = 'block'
         }
       }
     )
