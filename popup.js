@@ -203,7 +203,7 @@ async function scrapeFromPage(type) {
     let retries = 0
     while (true) {
       scrollContainer.scrollTop = scrollContainer.scrollHeight
-      await new Promise(r => setTimeout(r, 1000))
+      await new Promise(r => setTimeout(r, 800))
   
       const currentHeight = scrollContainer.scrollHeight
       if (currentHeight === previousHeight) {
